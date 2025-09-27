@@ -40,6 +40,8 @@ export async function generateMetadata({ params }: Props) {
     redirection: { redirects },
   } = await fetchPageData(slug);
 
+  if (!page) return null;
+
   handleRedirects(redirects, page.uri);
 
   const { canonical } = customSEO.customSeoSettings;
