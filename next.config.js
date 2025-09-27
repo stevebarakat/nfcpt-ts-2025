@@ -36,7 +36,13 @@ module.exports = {
       {
         protocol: "http",
         hostname: "localhost",
-        port: "10018",
+        port: "3000",
+        pathname: `**/*`,
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8080",
         pathname: `**/*`,
       },
     ],
