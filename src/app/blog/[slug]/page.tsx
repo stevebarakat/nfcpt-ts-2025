@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props) {
     title: post?.seo?.title,
     description: post?.seo?.metaDesc,
     alternates: {
-      canonical: `${canonical}${post.uri}`,
+      canonical: `${canonical}/blog${post.uri}`,
     },
   };
 }

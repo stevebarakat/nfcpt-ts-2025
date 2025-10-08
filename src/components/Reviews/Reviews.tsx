@@ -1,9 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ReactGoogleReviews } from "react-google-reviews";
 import { IoIosStar } from "react-icons/io";
-import "react-google-reviews/dist/index.css";
 import styles from "../Sidebar/sidebar.module.css";
 import { Button } from "../Button";
 
@@ -11,75 +9,93 @@ function generateRandomNumber(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-type GoogleReview = any;
+// Hardcoded testimonials data
+const testimonials = [
+  {
+    id: "1",
+    reviewer: {
+      displayName: "Sarah Johnson",
+      profilePhotoUrl:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
+    },
+    starRating: 5,
+    comment:
+      "Dr. Smith and his team provided exceptional care after my car accident. The physical therapy sessions were thorough and the chiropractic adjustments really helped with my neck pain. Highly recommend!",
+  },
+  {
+    id: "2",
+    reviewer: {
+      displayName: "Michael Rodriguez",
+      profilePhotoUrl:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    },
+    starRating: 5,
+    comment:
+      "The staff is incredibly professional and caring. They helped me recover from my workplace injury much faster than I expected. The facility is clean and modern.",
+  },
+  {
+    id: "3",
+    reviewer: {
+      displayName: "Jennifer Davis",
+      profilePhotoUrl:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
+    },
+    starRating: 5,
+    comment:
+      "I've been dealing with chronic back pain for years. After just a few sessions here, I'm feeling better than I have in a long time. The personalized treatment plan made all the difference.",
+  },
+];
 
 export default function Reviews() {
-  // get api key from https://featurable.com
-  const featurableWidgetId = "e5608580-702c-4ca8-b2b8-f03036a6f553";
-  const [key, setKey] = useState(() => generateRandomNumber(0, 99));
+  const [key, setKey] = useState(0); // Start with first testimonial to avoid hydration mismatch
+
+  // Set random testimonial after component mounts to avoid hydration mismatch
+  useEffect(() => {
+    setKey(generateRandomNumber(0, testimonials.length - 1));
+  }, []);
+
+  const currentTestimonial = testimonials[key];
+
+  const stars = Array.from(
+    { length: currentTestimonial.starRating },
+    (_, i) => <IoIosStar key={i} />
+  );
+
+  // Limit comment to 148 characters
+  const truncatedComment =
+    currentTestimonial.comment.length > 148
+      ? currentTestimonial.comment.slice(0, 148) + "..."
+      : currentTestimonial.comment;
 
   return (
-    <ReactGoogleReviews
-      structuredData={true}
-      reviewVariant="testimonial"
-      layout="custom"
-      featurableId={featurableWidgetId}
-      renderer={(reviews: GoogleReview[]) => {
-        const filteredReviews = reviews.filter(
-          (review) => review.comment.length > 0
-        );
-
-        const testimonials = filteredReviews.map((review) => {
-          if (review.comment === "") {
-            setKey(() => generateRandomNumber(0, reviews.length - 1));
-          }
-
-          const stars = Array.from({ length: review.starRating }, (_, i) => (
-            <IoIosStar key={i} />
-          ));
-
-          // Limit review.comment to 148 characters
-          const truncatedComment =
-            review.comment.length > 148
-              ? review.comment.slice(0, 148) + "..."
-              : review.comment;
-
-          return (
-            <div className={styles.testimonial} key={review.id}>
-              <div className={styles.testimonialImg}>
-                <Image
-                  src={review.reviewer.profilePhotoUrl}
-                  alt={review.reviewer.displayName}
-                  width={200}
-                  height={200}
-                />
-              </div>
-              <figcaption className={styles.testimonialAuthor}>
-                {review.reviewer.displayName}
-              </figcaption>
-              <div className={styles.testimonialStars}>{stars}</div>
-              <div>
-                <blockquote>
-                  <span className={styles.testimonial}>{truncatedComment}</span>
-                </blockquote>
-              </div>
-              <Button
-                style={{ cursor: "pointer" }}
-                textColor="white"
-                color="transparent"
-                borderColor="white"
-                className={styles.reviewBtn}
-                onClick={() =>
-                  setKey(generateRandomNumber(0, reviews.length - 1))
-                }
-              >
-                read another review
-              </Button>
-            </div>
-          );
-        });
-        return testimonials[key];
-      }}
-    />
+    <div className={styles.testimonial}>
+      <div className={styles.testimonialImg}>
+        <Image
+          src={currentTestimonial.reviewer.profilePhotoUrl}
+          alt={currentTestimonial.reviewer.displayName}
+          width={200}
+          height={200}
+        />
+      </div>
+      <figcaption className={styles.testimonialAuthor}>
+        {currentTestimonial.reviewer.displayName}
+      </figcaption>
+      <div className={styles.testimonialStars}>{stars}</div>
+      <div>
+        <blockquote>
+          <span className={styles.testimonial}>{truncatedComment}</span>
+        </blockquote>
+      </div>
+      <Button
+        style={{ cursor: "pointer" }}
+        textColor="white"
+        color="transparent"
+        borderColor="white"
+        className={styles.reviewBtn}
+        onClick={() => setKey(generateRandomNumber(0, testimonials.length - 1))}
+      >
+        read another review
+      </Button>
+    </div>
   );
 }

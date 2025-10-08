@@ -45,6 +45,12 @@ module.exports = {
         port: "8080",
         pathname: `**/*`,
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "",
+        pathname: `**/*`,
+      },
     ],
   },
 };

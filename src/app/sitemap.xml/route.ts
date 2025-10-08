@@ -43,7 +43,7 @@ export async function GET() {
   sitemapPosts.forEach((post: Page) => {
     xml += `
   <url>
-    <loc>${BASE_URL}${post.uri}</loc>
+    <loc>${BASE_URL}/blog${post.uri}</loc>
     <lastmod>${new Date(post.modified).toISOString()}</lastmod>
   </url>`;
   });
