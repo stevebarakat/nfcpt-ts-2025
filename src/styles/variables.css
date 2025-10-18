@@ -9,17 +9,17 @@
   --primaryColor50: hsla(201, 100%, 45%, 0.5);
   --primaryGradient: -webkit-linear-gradient(
     top,
-    hsla(201, 100%, 45%, 1) 0%,
-    hsla(201, 100%, 55%, 1) 51%,
-    hsla(201, 100%, 45%, 1) 100%
+    hsl(201 100% 45%) 0%,
+    hsl(201 100% 55%) 51%,
+    hsl(201 100% 45%) 100%
   );
   --accentColor: hsla(324, 80%, 47%, 1);
   --accentColor50: hsla(324, 80%, 67%, 0.5);
   --accentGradient: -webkit-linear-gradient(
     top,
-    hsla(324, 80%, 57%, 1) 0%,
-    hsla(324, 80%, 67%, 1) 50%,
-    hsla(324, 80%, 57%, 1) 100%
+    hsl(324 80% 57%) 0%,
+    hsl(324 80% 67%) 50%,
+    hsl(324 80% 57%) 100%
   );
   --darkColor: hsla(201, 100%, 10%, 1);
   --grey025: hsla(0, 0%, 97.5%, 1);
