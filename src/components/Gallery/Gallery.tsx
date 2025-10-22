@@ -54,13 +54,14 @@ const breakpoints = {
 
 // Gallery Image Component with fallback handling
 const GalleryImage = ({ service }: { service: Props["images"][0] }) => {
-  if (!service.image?.node.slug) return null;
-
-  const initialUrl = getSafeImageUrl(service.image.node.sourceUrl, "general");
+  const initialUrl = getSafeImageUrl(service.image?.node.sourceUrl, "general");
   const { currentUrl, handleError } = useImageFallback(
     initialUrl,
     FALLBACK_IMAGES.general
   );
+
+  if (!service.image?.node.slug) return null;
+
   const blur = buildUrl(service.image.node.slug, blurOptions);
 
   return (
