@@ -200,7 +200,7 @@ export default function Footer({
             Therapy
           </div>
           <div style={{ position: "relative" }}>
-            Site by <a href="mailto:stevebarakat@gmail.com">S.Barakat</a>
+            Site by <a href="https://www.stevebarakat.com">S.Barakat</a>
             <a href="#top" aria-label="back to top" className="back-to-top">
               <FaCircleUp
                 size={48}

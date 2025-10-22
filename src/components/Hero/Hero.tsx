@@ -1,8 +1,14 @@
+"use client";
 import Image from "next/legacy/image";
 import { blurOptions } from "@/utils/constants";
 import { buildUrl } from "cloudinary-build-url";
 import RawHtml from "../RawHtml/RawHtml";
-import carAccident from "/public/images/carAccident.webp";
+import carAccident from "../../../public/images/carAccident.webp";
+import {
+  getSafeImageUrl,
+  useImageFallback,
+  FALLBACK_IMAGES,
+} from "@/utils/image-helpers";
 import "./hero.css";
 
 type HeroProps = {
@@ -22,11 +28,15 @@ type HeroProps = {
 };
 
 function Hero({ home: { featuredImage, title, seo } }: HeroProps) {
+  const initialUrl = getSafeImageUrl(featuredImage?.node.sourceUrl, "hero");
+  const { currentUrl, handleError } = useImageFallback(
+    initialUrl,
+    FALLBACK_IMAGES.hero
+  );
   const blurDataURL = buildUrl(
     featuredImage?.node.slug || "car-accident",
-    blurOptions,
+    blurOptions
   );
-  const imgUrl = featuredImage?.node.sourceUrl ?? carAccident;
 
   return (
     <div className="hero">
@@ -37,8 +47,9 @@ function Hero({ home: { featuredImage, title, seo } }: HeroProps) {
         objectPosition="center"
         placeholder="blur"
         blurDataURL={blurDataURL}
-        src={imgUrl}
+        src={currentUrl}
         alt={featuredImage?.node?.altText || "car accident"}
+        onError={handleError}
       />
       <span className="hero-headline">
         {featuredImage?.node?.title || title}

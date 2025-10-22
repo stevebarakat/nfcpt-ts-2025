@@ -1,12 +1,15 @@
+"use client";
 import Image from "next/legacy/image";
 import { blurOptions } from "@/utils/constants";
 import { buildUrl } from "cloudinary-build-url";
 import { Container } from "../Container";
 import { RawHtml } from "../RawHtml";
+import {
+  getSafeImageUrl,
+  useImageFallback,
+  FALLBACK_IMAGES,
+} from "@/utils/image-helpers";
 import "./masthead.css";
-
-const featuredImg =
-  "https://res.cloudinary.com/nfcpt/images/v1728148775/wordpress-assets/blog/blog.jpg";
 
 type MastheadProps = {
   className?: string;
@@ -23,11 +26,17 @@ type MastheadProps = {
 };
 
 function Masthead({ featuredImage, className }: MastheadProps) {
-  const imgUrl = featuredImage?.node?.sourceUrl ?? featuredImg;
+  const initialUrl = getSafeImageUrl(
+    featuredImage?.node?.sourceUrl,
+    "featured"
+  );
+  const { currentUrl, handleError } = useImageFallback(
+    initialUrl,
+    FALLBACK_IMAGES.featured
+  );
+  const blurDataURL = buildUrl(currentUrl, blurOptions);
 
-  const blurDataURL = buildUrl(imgUrl, blurOptions);
-
-  console.log("imgUrl", imgUrl);
+  console.log("currentUrl", currentUrl);
 
   return (
     <div className={`${className} `}>
@@ -38,8 +47,9 @@ function Masthead({ featuredImage, className }: MastheadProps) {
         objectPosition="center"
         placeholder="blur"
         blurDataURL={blurDataURL}
-        src={imgUrl}
+        src={currentUrl}
         alt={featuredImage?.node?.altText || "featured image"}
+        onError={handleError}
       />
       <Container>
         <span className="headline">{featuredImage?.node?.title || ""}</span>

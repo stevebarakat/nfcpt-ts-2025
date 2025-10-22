@@ -6,6 +6,11 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { blurOptions } from "@/utils/constants";
 import { Card } from "@/components/Card";
+import {
+  getSafeImageUrl,
+  useImageFallback,
+  FALLBACK_IMAGES,
+} from "@/utils/image-helpers";
 import "swiper/css/pagination";
 import "swiper/css";
 import "./gallery.css";
@@ -47,6 +52,35 @@ const breakpoints = {
   },
 };
 
+// Gallery Image Component with fallback handling
+const GalleryImage = ({ service }: { service: Props["images"][0] }) => {
+  if (!service.image?.node.slug) return null;
+
+  const initialUrl = getSafeImageUrl(service.image.node.sourceUrl, "general");
+  const { currentUrl, handleError } = useImageFallback(
+    initialUrl,
+    FALLBACK_IMAGES.general
+  );
+  const blur = buildUrl(service.image.node.slug, blurOptions);
+
+  return (
+    <Card>
+      <RawHtml className="cardHeader">{service.image.node.caption}</RawHtml>
+      <div className="swiper-image">
+        <Image
+          width={200}
+          height={200}
+          placeholder="blur"
+          blurDataURL={blur}
+          src={currentUrl}
+          alt={service.image.node.altText}
+          onError={handleError}
+        />
+      </div>
+    </Card>
+  );
+};
+
 const Gallery = ({ images, title }: Props) => {
   return (
     <div className="gallery">
@@ -67,30 +101,11 @@ const Gallery = ({ images, title }: Props) => {
           }}
           breakpoints={breakpoints}
         >
-          {images.map((service, i) => {
-            if (!service.image?.node.slug) return;
-            const blur = buildUrl(service.image.node.slug, blurOptions);
-
-            return (
-              <SwiperSlide key={i}>
-                <Card>
-                  <RawHtml className="cardHeader">
-                    {service.image.node.caption}
-                  </RawHtml>
-                  <div className="swiper-image">
-                    <Image
-                      width={200}
-                      height={200}
-                      placeholder="blur"
-                      blurDataURL={blur}
-                      src={service.image.node.sourceUrl}
-                      alt={service.image.node.altText}
-                    />
-                  </div>
-                </Card>
-              </SwiperSlide>
-            );
-          })}
+          {images.map((service, i) => (
+            <SwiperSlide key={i}>
+              <GalleryImage service={service} />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </div>

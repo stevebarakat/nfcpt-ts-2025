@@ -2,6 +2,10 @@
 module.exports = {
   productionBrowserSourceMaps: true,
   images: {
+    // Add better error handling for images
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "https",
@@ -44,6 +48,12 @@ module.exports = {
         hostname: "localhost",
         port: "8080",
         pathname: `**/*`,
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8080",
+        pathname: `/wp-content/uploads/**/*`,
       },
       {
         protocol: "https",
