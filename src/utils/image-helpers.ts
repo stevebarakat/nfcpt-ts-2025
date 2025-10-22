@@ -8,7 +8,7 @@ import React from "react";
 export const FALLBACK_IMAGES = {
   hero: "/images/carAccident.webp",
   featured:
-    "http://localhost:3000/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fnfcpt%2Fimages%2Ff_webp%2Cq_auto%2Fv1735799593%2Fchiropractic-serivces%2Fchiropractic-serivces.jpg%3F_i%3DAA&w=1920&q=75",
+    "https://res.cloudinary.com/stevebarakat/images/v1761144049/chiropractic-serivces_81321a89/chiropractic-serivces_81321a89.jpg",
   general: "/images/notFound.webp",
 } as const;
 
